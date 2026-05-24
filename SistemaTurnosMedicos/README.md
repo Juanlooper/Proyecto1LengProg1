@@ -128,4 +128,3 @@ Viste que agregamos `?? string.Empty` al final de los `Console.ReadLine()`.
 *   Se lee así: "Lee lo que escriba el usuario. **PERO SI** resulta ser `null`, no causes un error, sino que reemplázalo automáticamente por `string.Empty` (un texto vacío `""`)". Así nos curamos en salud.
 
 ---
-**¡Con esta guía están preparados para cualquier pregunta que el profesor les haga! Todo el proyecto está construido bajo buenas prácticas, cumpliendo al 100% su rúbrica y con una presentación visual superior al promedio.**
