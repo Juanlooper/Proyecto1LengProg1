@@ -6,88 +6,67 @@ namespace SistemaTurnosMedicos
     {
         static void Main(string[] args)
         {
-            // Instanciamos los objetos necesarios que controlarán el flujo del programa
             AsignadorTurnos asignador = new AsignadorTurnos();
             InterfazUsuario ui = new InterfazUsuario();
             
-            bool continuarEjecucion = true;
-
-            // Ciclo do-while para permitir el registro de múltiples turnos
-            do
+            while (true)
             {
                 ui.MostrarEncabezado();
-                
-                // --- 1. Solicitar datos básicos del paciente ---
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("1. Registrar nuevo turno");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("2. Salir");
+                Console.ResetColor();
+                Console.Write("Seleccione una opción: ");
+                string opcionMenu = Console.ReadLine() ?? string.Empty;
+
+                if (opcionMenu == "2") break;
+                if (opcionMenu != "1")
+                {
+                    ui.MostrarError("Opción no válida.");
+                    ui.Pausar();
+                    continue;
+                }
+
+                ui.MostrarEncabezado();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("--- Registro de Paciente ---");
                 Console.ResetColor();
                 
-                Console.Write("Ingrese el nombre del paciente: ");
-                string nombre = Console.ReadLine() ?? string.Empty;
+                string nombre = ObtenerEntrada("Ingrese el nombre del paciente: ", (s) => !string.IsNullOrWhiteSpace(s), "El nombre no puede estar vacío.");
+                string apellido = ObtenerEntrada("Ingrese el apellido del paciente: ", (s) => !string.IsNullOrWhiteSpace(s), "El apellido no puede estar vacío.");
                 
-                Console.Write("Ingrese el apellido del paciente: ");
-                string apellido = Console.ReadLine() ?? string.Empty;
-                
-                // Validación básica de entrada con estructura if
-                if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(apellido))
+                int edad = 0;
+                while (true)
                 {
-                    ui.MostrarError("El nombre y apellido no pueden estar vacíos.");
-                    ui.Pausar();
-                    continue; // Reinicia el ciclo para volver a pedir los datos
+                    Console.Write("Ingrese la edad del paciente: ");
+                    string edadStr = Console.ReadLine() ?? string.Empty;
+                    if (int.TryParse(edadStr, out edad) && edad >= 0 && edad <= 120) break;
+                    ui.MostrarError("Edad inválida. Ingrese un número entero entre 0 y 120.");
                 }
 
-                Console.Write("Ingrese la edad del paciente: ");
-                string edadStr = Console.ReadLine() ?? string.Empty;
-                int edad;
-
-                // Validación para asegurar que la edad es un número válido
-                if (!int.TryParse(edadStr, out edad) || edad < 0 || edad > 120)
-                {
-                    ui.MostrarError("Edad inválida. Por favor, ingrese un número entero entre 0 y 120.");
-                    ui.Pausar();
-                    continue;
-                }
-
-                // Instancia de la clase Paciente
                 Paciente pacienteActual = new Paciente(nombre, apellido, edad);
-                Console.WriteLine();
-
-                // --- 2. Mostrar menú de especialidades y capturar selección ---
-                ui.MostrarMenuEspecialidades();
-                Console.Write("Seleccione la especialidad deseada (1-3): ");
-                string opcionStr = Console.ReadLine() ?? string.Empty;
-                int opcionEspecialidad;
-
-                // Validación para la selección de especialidad
-                if (!int.TryParse(opcionStr, out opcionEspecialidad) || opcionEspecialidad < 1 || opcionEspecialidad > 3)
+                
+                int opcionEspecialidad = 0;
+                while (true)
                 {
-                    ui.MostrarError("Opción no válida. Debe seleccionar un número del 1 al 3.");
-                    ui.Pausar();
-                    continue;
+                    ui.MostrarMenuEspecialidades();
+                    Console.Write("Seleccione la especialidad deseada (1-3): ");
+                    string opStr = Console.ReadLine() ?? string.Empty;
+                    if (int.TryParse(opStr, out opcionEspecialidad) && opcionEspecialidad >= 1 && opcionEspecialidad <= 3) break;
+                    ui.MostrarError("Opción no válida.");
                 }
 
-                // --- 3. Asignación de Turno y Cálculo de Tiempo ---
-                // Uso de los métodos de la clase AsignadorTurnos
+                ui.MostrarProcesando("Generando turno y calculando tiempo de espera");
+
                 string turnoAsignado = asignador.AsignarTurno(opcionEspecialidad);
                 int tiempoEspera = asignador.CalcularTiempoEspera(opcionEspecialidad);
                 string nombreEspecialidad = asignador.ObtenerNombreEspecialidad(opcionEspecialidad);
 
-                // --- 4. Mostrar resumen del turno ---
                 ui.MostrarResumenTurno(pacienteActual, nombreEspecialidad, turnoAsignado, tiempoEspera);
+                ui.Pausar();
+            }
 
-                // --- 5. Preguntar si se desea registrar otro turno ---
-                Console.WriteLine();
-                Console.Write("¿Desea registrar otro turno? (S/N): ");
-                string respuesta = Console.ReadLine() ?? string.Empty;
-
-                if (respuesta != null && respuesta.Trim().ToUpper() == "N")
-                {
-                    continuarEjecucion = false;
-                }
-
-            } while (continuarEjecucion);
-
-            // Mensaje final de despedida
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("======================================================");
@@ -95,6 +74,19 @@ namespace SistemaTurnosMedicos
             Console.WriteLine("             ¡Que tenga un excelente día!");
             Console.WriteLine("======================================================");
             Console.ResetColor();
+        }
+
+        static string ObtenerEntrada(string prompt, Func<string, bool> validar, string mensajeError)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string entrada = Console.ReadLine() ?? string.Empty;
+                if (validar(entrada)) return entrada;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[ERROR] {mensajeError}");
+                Console.ResetColor();
+            }
         }
     }
 }

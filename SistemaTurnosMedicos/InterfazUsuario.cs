@@ -14,11 +14,31 @@ namespace SistemaTurnosMedicos
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("======================================================");
-            Console.WriteLine("       SISTEMA DE CONTROL DE TURNOS MÉDICOS");
-            Console.WriteLine("======================================================");
+            Console.WriteLine("   +=============================================+");
+            Console.WriteLine("   |                                             |");
+            Console.WriteLine("   |     SISTEMA DE CONTROL DE TURNOS MÉDICOS    |");
+            Console.WriteLine("   |            ~ Clinica La Salud ~             |");
+            Console.WriteLine("   |                                             |");
+            Console.WriteLine("   +=============================================+");
             Console.ResetColor();
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Muestra una animación de procesamiento en la consola.
+        /// </summary>
+        public void MostrarProcesando(string mensaje)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write(mensaje);
+            for (int i = 0; i < 3; i++)
+            {
+                System.Threading.Thread.Sleep(600); // Pausa de 600ms
+                Console.Write(".");
+            }
+            Console.WriteLine();
+            Console.ResetColor();
         }
 
         /// <summary>

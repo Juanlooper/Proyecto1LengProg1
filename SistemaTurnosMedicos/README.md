@@ -1,130 +1,67 @@
-# Sistema de Control de Turnos Médicos - Guía Explicativa Completa
+# 🏥 Sistema de Control de Turnos Médicos
 
-¡Hola! Este documento es una guía exhaustiva diseñada para que entiendas **cada línea de código** de este proyecto. Está escrito pensando en estudiantes y principiantes en la programación. Si te preguntan en la evaluación cómo funciona tu programa, aquí tienes absolutamente todas las respuestas.
+![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Console App](https://img.shields.io/badge/Console-App-black?style=for-the-badge&logo=windows-terminal)
 
----
+Un sistema de consola interactivo desarrollado en **C# (.NET 8.0)** para simular el registro y la asignación de turnos de atención médica en un consultorio (Clínica La Salud). 
 
-## 1. Conceptos Básicos y Palabras Reservadas en C#
-
-Antes de ver los archivos, es crucial entender las palabras clave que se repiten en todo el código:
-
-*   **`using System;`**: Es como decirle al programa "Quiero usar la caja de herramientas básica de C#". `System` nos permite usar funciones básicas del lenguaje como `Console.WriteLine()` para imprimir en la pantalla.
-*   **`namespace`**: Imagina que es una "carpeta lógica" o "apellido" para tus archivos. Todos nuestros archivos dicen `namespace SistemaTurnosMedicos`. Esto agrupa todas nuestras clases bajo un mismo techo, asegurando que todos se conocen entre sí y pertenecen al mismo proyecto.
-*   **`class`** (Clase): Es un "molde" o "plano" para crear objetos. En programación orientada a objetos (POO), no escribimos todo de corrido; creamos moldes (ej. un molde `Paciente`) y luego creamos a los pacientes reales usando ese molde.
-*   **Modificadores de Acceso (`public` y `private`)**: 
-    *   **`public`**: Significa que otras partes del código pueden ver, leer y usar esa variable o método libremente. 
-    *   **`private`**: Significa que es un secreto que solo pertenece a esa clase. Por ejemplo, en `AsignadorTurnos`, los contadores de turnos son privados para evitar que desde otra parte del código se modifiquen por accidente (o haciendo trampa).
-*   **Tipos de datos**: 
-    *   `string`: Sirve para guardar cadenas de texto (ej. "Juan", "Pediatría").
-    *   `int`: Sirve para guardar números enteros sin decimales (ej. 1, 2, 25, 100).
-    *   `bool`: Solo puede guardar dos estados: verdadero (`true`) o falso (`false`).
-*   **`void`**: Se usa en la firma de los métodos (funciones) para decirle a la computadora: "Este método hace un trabajo, pero al terminar NO devuelve ningún valor". Por ejemplo, un método que solo imprime en pantalla.
-*   **`return`**: Es lo opuesto a `void`. Se usa para devolver un resultado final a quien llamó a la función (por ejemplo, devolver el cálculo de los minutos de espera).
-*   **`static`**: Significa que pertenece a la clase en general y no hace falta crear un "objeto" para usarlo. El método principal por donde arranca el programa (`static void Main`) siempre debe ser estático para que Windows sepa ejecutarlo de inmediato.
-*   **`out`**: Es una palabra clave que le indica a un método que una variable que le estamos enviando será *modificada* y nos será *devuelta* con un valor nuevo desde adentro del método. Lo usamos mucho en el manejo de errores (lo veremos más abajo).
+Este proyecto fue desarrollado como cumplimiento del **Proyecto #1 de Programación I**, aplicando los principios de la Programación Orientada a Objetos (POO), manejo estricto de excepciones y diseño de consola dinámico.
 
 ---
 
-## 2. Cómo se conectan los archivos (Instanciación y Llamado de Métodos)
+## ✨ Características Principales
 
-Una de las preguntas más comunes es: **¿Cómo hace `Program.cs` (el archivo principal) para usar el código que escribimos en otros archivos?**
-
-En Programación Orientada a Objetos, esto se hace en dos pasos: **Instanciar** y **Llamar**.
-
-### Paso 1: Instanciar (La palabra `new`)
-En `Program.cs`, casi al principio del `Main`, vas a ver esto:
-```csharp
-AsignadorTurnos asignador = new AsignadorTurnos();
-InterfazUsuario ui = new InterfazUsuario();
-```
-*   `AsignadorTurnos` es el *molde* (la clase) que está en el otro archivo.
-*   `asignador` es la *variable* donde guardamos nuestro objeto real.
-*   `new AsignadorTurnos();` es la orden que le dice a la memoria RAM de la computadora: "¡Construye un objeto real usando este molde!".
-Hacemos lo mismo con la Interfaz de Usuario (`ui`). A partir de ese momento, `Program.cs` ya tiene acceso a las herramientas de esos otros archivos.
-
-### Paso 2: Llamar a los métodos (El punto `.`)
-Cuando queremos que la Interfaz haga algo, usamos nuestra variable `ui`, escribimos un punto (`.`) y el nombre del método:
-```csharp
-ui.MostrarEncabezado();
-```
-El punto (`.`) significa "de este objeto, usa esta habilidad". Así es como conectamos y hacemos que archivos separados interactúen entre sí como un equipo.
+*   **Gestión de Pacientes:** Registro de datos básicos (Nombre, Apellido, Edad).
+*   **Asignación Inteligente:** Generación de tickets secuenciales por especialidad médica (`MG-01`, `PE-02`, `CA-03`).
+*   **Cálculo Dinámico de Espera:** El tiempo de atención estimado se calcula automáticamente dependiendo de la especialidad seleccionada:
+    *   💊 *Medicina General:* 15 minutos por turno previo.
+    *   🧸 *Pediatría:* 20 minutos por turno previo.
+    *   ❤️ *Cardiología:* 30 minutos por turno previo.
+*   **Validación de Datos (Anti-Crash):** Implementación de validaciones robustas mediante delegados (`Func<string, bool>`) y `TryParse`. El sistema guía al usuario ante entradas incorrectas sin reiniciar el progreso general.
+*   **Diseño Visual Atractivo (Creatividad):**
+    *   Interfaz coloreada para diferenciar encabezados, advertencias, opciones y resultados.
+    *   Animación fluida (simulación de carga de sistema) al momento de asignar los turnos.
+    *   Banners con formato enmarcado.
 
 ---
 
-## 3. Explicación Archivo por Archivo
+## 🏗️ Arquitectura del Código
 
-El proyecto está dividido en 4 clases para mantener el orden (esto es clave en POO y da puntos en la rúbrica).
+El código fue estructurado siguiendo el principio de Responsabilidad Única para no depender de arreglos (arrays), vectores ni matrices. Se divide en cuatro clases principales:
 
-### A) `Paciente.cs`
-Este archivo es el molde para crear pacientes. Solo guarda datos.
-*   **Propiedades (`get; set;`)**: `public string Nombre { get; set; }`. El `get` (obtener) permite que leamos el nombre después, y el `set` (establecer) permite asignarle un nombre en primer lugar.
-*   **El Constructor (`public Paciente(string nombre, string apellido, int edad)`)**: Es un método especial que tiene *el mismo nombre* que la clase. Se ejecuta **automáticamente** en el momento que usamos la palabra `new`. Sirve para exigir que desde el momento cero, el paciente ya nazca con su nombre, apellido y edad.
-*   **Interpolación de strings (`$"{Nombre} {Apellido}"`)**: El símbolo `$` antes de las comillas nos permite meter variables directamente adentro de las llaves `{}` para unir texto fácilmente, sin usar el signo `+`.
-
-### B) `AsignadorTurnos.cs`
-Aquí está toda la lógica matemática. **La regla de oro del proyecto era NO usar arreglos, vectores ni matrices**, por lo que cumplimos esto usando contadores individuales.
-*   **`turnosMedicinaGeneral`, `turnosPediatria`, `turnosCardiologia`**: Son los contadores individuales que arrancan en cero.
-*   **`switch (opcionEspecialidad)`**: Es una estructura de control ideal para menús. "En caso (`case`) de que haya elegido 1, suma un turno a Medicina General. En caso (`case`) 2, suma a Pediatría". Es mucho más rápido de leer que usar muchos `if` anidados.
-*   **`turnosMedicinaGeneral++`**: Es un atajo para escribir `turnosMedicinaGeneral = turnosMedicinaGeneral + 1`. Básicamente, incrementa el número de la fila.
-*   **Formato de dígitos (`:D2`)**: Cuando retornamos el turno (ej. `$"MG-{turnosMedicinaGeneral:D2}"`), el `:D2` le dice a la computadora: "Siempre ponle 2 dígitos a este número". Así, si es el turno 1, imprime "01".
-
-### C) `InterfazUsuario.cs`
-Para que la clase `Program` no se llene de código feo de colores y textos, sacamos la "estética" a esta clase.
-*   **`Console.ForegroundColor = ConsoleColor.Cyan;`**: Cambia el color de la letra que se va a imprimir a continuación.
-*   **`Console.ResetColor();`**: ¡Vital! Devuelve el color al blanco original. Si no lo pones, toda la consola se quedaría pintada de colores extraños para siempre.
-*   **`Console.Clear();`**: "Borra el pizarrón". Limpia la pantalla para que el menú luzca como una aplicación nueva y no como una consola amontonada.
-*   **`Console.ReadKey();`**: Detiene el programa y espera a que el usuario presione cualquier tecla física para continuar.
-
-### D) `Program.cs` (El Director de la Orquesta)
-Es la clase que contiene el `static void Main`, que es donde Windows sabe que debe iniciar la ejecución. Aquí es donde ocurre el ciclo principal (las repeticiones).
+1.  **`Program.cs`:** Punto de entrada de la aplicación. Orquesta el menú principal, controla el ciclo de repetición (`while`) y gestiona el flujo de peticiones hacia el usuario mediante métodos de captura segura.
+2.  **`AsignadorTurnos.cs`:** El núcleo matemático. Se encarga de la lógica de asignación con la estructura `switch`, el control secuencial de los mostradores (usando contadores independientes) y el cálculo matemático del tiempo de espera.
+3.  **`InterfazUsuario.cs`:** Maneja exclusivamente toda la interacción con la consola (estética visual). Centraliza los métodos para pintar errores en rojo, opciones en verde/amarillo, banners, el menú de opciones y las animaciones de carga.
+4.  **`Paciente.cs`:** Modelo de datos. Funciona como el molde que representa a la entidad paciente dentro de la memoria RAM durante la asignación del turno.
 
 ---
 
-## 4. El Ciclo Paso a Paso (`do-while`)
+## 🚀 Requisitos para Ejecutar
 
-Uno de los requisitos era permitir "registrar varios turnos hasta que el usuario decida finalizar". Para esto usamos un ciclo `do-while`.
+Para correr este proyecto necesitas tener instalado en tu computadora:
 
-**¿Por qué `do-while` y no `while` normal?**
-La palabra `do` significa "hacer". El ciclo `do-while` asegura que el código se ejecute **por lo menos una vez** (ya que primero necesitamos mostrarle el menú al paciente al menos la primera vez) y, al final del todo (`while`), pregunta si queremos repetir.
-
-**El flujo ocurre así:**
-1.  **Inicio**: Se declara `bool continuarEjecucion = true;`. Esto es nuestra "bandera" de estado.
-2.  **Apertura (`do {`)**: Entramos al ciclo.
-3.  **Paso 1 (Ingreso)**: Se le pide nombre, apellido y edad al usuario. (Aquí ocurre la validación de errores).
-4.  **Paso 2 (Menú)**: Se le pide elegir especialidad 1, 2 o 3. (Validación de errores otra vez).
-5.  **Paso 3 (Proceso)**: Llamamos a `asignador.AsignarTurno()` pasándole la opción que eligió el usuario. El método hace el cálculo internamente y nos devuelve el número del ticket.
-6.  **Paso 4 (Salida)**: Llamamos a `ui.MostrarResumenTurno(...)` y le mandamos todos los datos (el paciente, la especialidad y el ticket) para que lo imprima bonito con colores.
-7.  **Paso 5 (La Pregunta)**: Le preguntamos al usuario `¿Desea registrar otro turno? (S/N)`. Si teclea "N", cambiamos nuestra bandera `continuarEjecucion` a `false`.
-8.  **Cierre (`} while(continuarEjecucion);`)**: Aquí la computadora evalúa la bandera. Si sigue siendo `true` (el usuario puso "S"), el programa "salta" de regreso arriba a la palabra `do` y limpia la pantalla. Si es `false`, el ciclo se rompe, el programa "escapa" de las llaves y muestra el mensaje de despedida final.
+*   [.NET SDK 8.0 o superior](https://dotnet.microsoft.com/en-us/download).
 
 ---
 
-## 5. ¿Cómo funciona el Control de Errores? (Manejo de Excepciones)
+## 💻 Instrucciones de Uso
 
-Si un usuario malicioso ingresa una letra "A" cuando le pides su edad, el programa normalmente "explotaría" (crash). Para evitarlo y ganar todos los puntos, usamos validaciones profesionales en `Program.cs`.
-
-#### A. Validación de Textos Vacíos
-```csharp
-if (string.IsNullOrWhiteSpace(nombre))
-```
-*   **¿Para qué sirve?** Comprueba si el usuario le dio a 'Enter' sin teclear su nombre, o si trató de engañar al programa tecleando solo barras espaciadoras.
-*   **¿Qué es `continue`?** Si detectamos el error (es `true`), mostramos un aviso en rojo y usamos la palabra **`continue;`**. Esta palabra es mágica: le dice al ciclo `do-while`: "Olvida lo que estabas haciendo, aborta esta iteración y **regresa al principio de inmediato**" para volver a pedir los datos.
-
-#### B. Validación de Números (El poder de `TryParse` y `out`)
-```csharp
-if (!int.TryParse(edadStr, out edad) || edad < 0 || edad > 120)
-```
-Esta es la parte más técnica para leer números en C#:
-1.  **`Console.ReadLine()`** SIEMPRE captura texto (string). Si el usuario escribe "15", para la PC eso es la palabra "15", no un valor matemático.
-2.  **`int.TryParse(edadStr, out edad)`**: Es un método especial que "intenta traducir". Significa: "Intenta traducir el texto `edadStr` a un número matemático".
-3.  **La palabra `out`**: Como `TryParse` necesita decirnos dos cosas a la vez (1: "Si tuvo éxito o no" y 2: "El número ya convertido"), usamos `out edad`. Significa: "Si logras traducir el texto a número, *escupelo* o *sácate* el número convertido hacia afuera y guárdalo en mi variable vacía llamada `edad`".
-    *   Si el usuario escribió "Hola", falla al traducir, devuelve `false`, y no rompe nada.
-4.  **El símbolo `!` (Not)**: Significa negación lógica. Toda la línea se lee: "Si **NO** se pudo traducir a número, **O** (`||`) la edad es menor a 0, **O** la edad es mayor a 120, entonces hay un error."
-
-#### C. El arreglo de las Advertencias (Warnings CS8600)
-Viste que agregamos `?? string.Empty` al final de los `Console.ReadLine()`.
-*   A veces, bajo ciertas condiciones extremas, la consola podría devolver un valor nulo (`null`), que literalmente significa "vacío absoluto" (peor que un texto en blanco).
-*   El operador `??` (Null-coalescing) funciona como un seguro de vida. 
-*   Se lee así: "Lee lo que escriba el usuario. **PERO SI** resulta ser `null`, no causes un error, sino que reemplázalo automáticamente por `string.Empty` (un texto vacío `""`)". Así nos curamos en salud.
+1.  **Clona o descarga** este repositorio en tu máquina local.
+2.  Abre una terminal o consola de comandos en la raíz del proyecto.
+3.  Navega hasta la carpeta del código fuente:
+    ```bash
+    cd SistemaTurnosMedicos
+    ```
+4.  Compila y ejecuta la aplicación:
+    ```bash
+    dotnet run
+    ```
+5.  Sigue las instrucciones en pantalla para registrar pacientes, asignando turnos secuencialmente o abandonando el programa desde el menú principal.
 
 ---
+
+## 📝 Autor / Equipo
+
+Proyecto académico desarrollado para el Módulo II (Programación I).
+*Elaborado sin el uso de matrices ni arreglos, aplicando exclusivamente estructuras cíclicas, condicionales y Programación Orientada a Objetos.*
