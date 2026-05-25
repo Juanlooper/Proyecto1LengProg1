@@ -2,6 +2,7 @@ using System;
 
 namespace SistemaTurnosMedicos
 {
+    // Esta es la clase principal donde arranca el programa. Acá está el menú y el ciclo while para que no se cierre.
     class Program
     {
         static void Main(string[] args)
@@ -76,6 +77,8 @@ namespace SistemaTurnosMedicos
             Console.ResetColor();
         }
 
+        // Me armé esta función extra usando delegados (Func) para validar lo que escribe el usuario. 
+        // Así no tengo que repetir el mismo while cada vez que pido un dato.
         static string ObtenerEntrada(string prompt, Func<string, bool> validar, string mensajeError)
         {
             while (true)

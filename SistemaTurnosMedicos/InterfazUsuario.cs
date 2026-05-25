@@ -2,14 +2,10 @@ using System;
 
 namespace SistemaTurnosMedicos
 {
-    /// <summary>
-    /// Clase encargada de manejar la interacción visual con el usuario (estética en consola).
-    /// </summary>
+    // Toda la parte de los colores, los menúes y lo que ve el usuario en la consola lo puse en esta clase para no mezclarlo con la lógica.
     public class InterfazUsuario
     {
-        /// <summary>
-        /// Muestra el encabezado principal del sistema.
-        /// </summary>
+        // Pinta el título bonito que aparece arriba de todo.
         public void MostrarEncabezado()
         {
             Console.Clear();
@@ -24,9 +20,7 @@ namespace SistemaTurnosMedicos
             Console.WriteLine();
         }
 
-        /// <summary>
-        /// Muestra una animación de procesamiento en la consola.
-        /// </summary>
+        // Hace una pequeña animación con puntitos para simular que el programa está pensando.
         public void MostrarProcesando(string mensaje)
         {
             Console.WriteLine();
@@ -41,9 +35,7 @@ namespace SistemaTurnosMedicos
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Muestra el menú de especialidades disponibles.
-        /// </summary>
+        // Muestra las opciones de áreas médicas que el paciente puede elegir.
         public void MostrarMenuEspecialidades()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -55,9 +47,7 @@ namespace SistemaTurnosMedicos
             Console.WriteLine("----------------------------------");
         }
 
-        /// <summary>
-        /// Imprime un mensaje de error con color rojo.
-        /// </summary>
+        // Pinta los errores de rojo para que el usuario se dé cuenta rápido que hizo algo mal.
         public void MostrarError(string mensaje)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -65,9 +55,7 @@ namespace SistemaTurnosMedicos
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Muestra el resumen final del turno asignado de forma estética.
-        /// </summary>
+        // Muestra el resultado final con los datos del paciente y su turno, acomodado para que se vea bien.
         public void MostrarResumenTurno(Paciente paciente, string especialidad, string numeroTurno, int tiempoEsperaMinutos)
         {
             Console.WriteLine();
@@ -81,7 +69,7 @@ namespace SistemaTurnosMedicos
             Console.WriteLine($" NÚMERO DE TURNO:      {numeroTurno}");
             Console.ResetColor();
             
-            // Lógica para mostrar horas y minutos si el tiempo es mayor o igual a 60 min
+            // Esto lo agregué para que si la espera es de 60 min o más, lo muestre en horas en vez de solo minutos
             if (tiempoEsperaMinutos >= 60)
             {
                 int horas = tiempoEsperaMinutos / 60;
@@ -98,9 +86,7 @@ namespace SistemaTurnosMedicos
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Espera a que el usuario presione una tecla antes de continuar.
-        /// </summary>
+        // Pausa el programa hasta que el usuario toque cualquier tecla para poder leer antes de que limpie la pantalla.
         public void Pausar()
         {
             Console.WriteLine();

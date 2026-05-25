@@ -2,22 +2,18 @@ using System;
 
 namespace SistemaTurnosMedicos
 {
-    /// <summary>
-    /// Clase que representa a un paciente en el consultorio médico.
-    /// </summary>
+    // Esta clase es como un molde para guardar los datos de cada paciente que se va registrando en memoria.
     public class Paciente
     {
-        // Atributos básicos del paciente
+        // Acá guardo los datos básicos que me pide el programa
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public int Edad { get; set; }
 
-        /// <summary>
-        /// Constructor para inicializar los datos del paciente.
-        /// </summary>
-        /// <param name="nombre">Nombre del paciente.</param>
-        /// <param name="apellido">Apellido del paciente.</param>
-        /// <param name="edad">Edad del paciente.</param>
+        // Este es el constructor que uso cuando creo un nuevo paciente con new Paciente(...)
+        //El nombre de la persona.</param>
+        //El apellido de la persona.</param>
+        //Cuántos años tiene.</param>
         public Paciente(string nombre, string apellido, int edad)
         {
             Nombre = nombre;
@@ -25,9 +21,7 @@ namespace SistemaTurnosMedicos
             Edad = edad;
         }
 
-        /// <summary>
-        /// Retorna el nombre completo del paciente.
-        /// </summary>
+        // Una funcioncita rápida para pegar el nombre y el apellido y no tener que hacerlo a mano en cada WriteLine.
         public string ObtenerNombreCompleto()
         {
             return $"{Nombre} {Apellido}";
