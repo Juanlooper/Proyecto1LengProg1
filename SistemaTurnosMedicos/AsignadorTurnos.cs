@@ -54,23 +54,27 @@ namespace SistemaTurnosMedicos
         public int CalcularTiempoEspera(int opcionEspecialidad)
         {
             int turnosPrevios = 0;
+            int tiempoAtencion = 0;
 
             // Se determina cuántos turnos previos hay en esa especialidad
             // Al asignar un turno ya se incrementó el contador, por lo que restamos 1 para saber cuántos hay *antes*.
             if (opcionEspecialidad == 1)
             {
                 turnosPrevios = turnosMedicinaGeneral - 1;
+                tiempoAtencion = 15; // Medicina General atiende cada 15 min
             }
             else if (opcionEspecialidad == 2)
             {
                 turnosPrevios = turnosPediatria - 1;
+                tiempoAtencion = 20; // Pediatría toma más tiempo, 20 min
             }
             else if (opcionEspecialidad == 3)
             {
                 turnosPrevios = turnosCardiologia - 1;
+                tiempoAtencion = 30; // Cardiología toma 30 min
             }
 
-            return turnosPrevios * TiempoAtencionPorTurno;
+            return turnosPrevios * tiempoAtencion;
         }
 
         /// <summary>
